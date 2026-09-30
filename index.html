@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Swakriti AI Fashion Recommendation</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f7f7f8;
+            color: #1f1f1f;
+        }
+
+        /* =========================
+           HEADER
+        ========================== */
+
+        header {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 20px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .logo span {
+            font-weight: 400;
+            color: #777;
+        }
+
+        .status {
+            font-size: 13px;
+            color: #238636;
+        }
+
+        /* =========================
+           MAIN
+        ========================== */
+
+        main {
+            max-width: 1250px;
+            margin: auto;
+            padding: 45px 20px;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .hero h1 {
+            font-size: 38px;
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        /* =========================
+           SEARCH
+        ========================== */
+
+        .search-container {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .search-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .search-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-row textarea {
+            flex: 1;
+            min-height: 110px;
+            border: 1px solid #d7d7d7;
+            border-radius: 9px;
+            padding: 14px 17px;
+            font-size: 15px;
+            outline: none;
+            resize: vertical;
+        }
+
+        .search-row textarea:focus {
+            border-color: #222;
+        }
+
+        .search-row button {
+            height: 52px;
+            padding: 0 28px;
+            border: none;
+            border-radius: 9px;
+            background: #171717;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .search-row button:hover {
+            background: #333;
+        }
+
+        /* =========================
+           EXAMPLE QUERIES
+        ========================== */
+
+        .examples {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .example {
+            border: 1px solid #ddd;
+            background: #fafafa;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .example:hover {
+            background: #eee;
+        }
+
+        /* =========================
+           FILTERS
+        ========================== */
+
+        .filters {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .filters select {
+            padding: 11px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            min-width: 150px;
+        }
+
+        /* =========================
+           RESULTS HEADER
+        ========================== */
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .results-header h2 {
+            font-size: 23px;
+        }
+
+        .result-count {
+            color: #777;
+            font-size: 14px;
+        }
+
+        /* =========================
+           PRODUCTS
+        ========================== */
+
+        .products {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fill, minmax(270px, 1fr));
+            gap: 22px;
+        }
+
+        .product-card {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 14px;
+            overflow: hidden;
+            transition: 0.2s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+
+        /* =========================
+           IMAGE
+        ========================== */
+
+        .product-image {
+            width: 100%;
+            height: 330px;
+            background: #eeeeee;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-placeholder {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+        }
+
+        .badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: white;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* =========================
+           PRODUCT INFO
+        ========================== */
+
+        .product-info {
+            padding: 18px;
+        }
+
+        .brand {
+            color: #777;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .product-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 9px;
+        }
+
+        .details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .tag {
+            background: #f0f0f0;
+            padding: 5px 8px;
+            border-radius: 5px;
+            font-size: 11px;
+            color: #555;
+        }
+
+        .description {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 14px;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .rating {
+            font-size: 13px;
+            color: #555;
+        }
+
+        /* =========================
+           AI MATCH
+        ========================== */
+
+        .match {
+            margin-top: 13px;
+            padding-top: 13px;
+            border-top: 1px solid #eee;
+            font-size: 12px;
+            color: #555;
+        }
+
+        .match strong {
+            color: #222;
+        }
+
+        /* =========================
+           LOADING
+        ========================== */
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 60px;
+            color: #777;
+        }
+
+        .spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid #ddd;
+            border-top-color: #222;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: auto auto 15px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* =========================
+           EMPTY
+        ========================== */
+
+        .empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 70px 20px;
+            color: #777;
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 14px;
+        }
+
+        .empty h3 {
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        /* =========================
+           ERROR
+        ========================== */
+
+        .error {
+            display: none;
+            background: #fff0f0;
+            border: 1px solid #f0caca;
+            color: #a33;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        /* =========================
+           MOBILE
+        ========================== */
+
+        @media (max-width: 700px) {
+
+            header {
+                padding: 18px 20px;
+            }
+
+            .hero h1 {
+                font-size: 29px;
+            }
+
+            .search-row {
+                flex-direction: column;
+            }
+
+            .search-row button {
+                width: 100%;
+            }
+
+            .product-image {
+                height: 300px;
+            }
+
+            .results-header {
+                align-items: flex-start;
+                gap: 5px;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        Swakriti <span>AI Fashion</span>
+    </div>
+
+    <div class="status">
+        ● AI Recommendation
+    </div>
+
+</header>
+
+
+<main>
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <h1>Find Your Perfect Dress</h1>
+
+        <p>
+            Type your complete request in one prompt. Include size, budget, occasion, colour and style if they matter.
+        </p>
+
+    </section>
+
+
+    <!-- SEARCH -->
+
+    <section class="search-container">
+
+        <div class="search-title">
+            What are you looking for?
+        </div>
+
+        <div class="search-row">
+
+            <textarea
+                id="searchInput"
+                placeholder="Example: I am shopping for a woman, size M. I need a blue dress for a wedding under ₹5,000."
+            ></textarea>
+
+            <button onclick="searchProducts()">
+                Find Dresses
+            </button>
+
+        </div>
+
+
+        <div class="examples">
+
+            <button
+                class="example"
+                onclick="useExample('Elegant dress for a wedding')"
+            >
+                Wedding
+            </button>
+
+            <button
+                class="example"
+                onclick="useExample('Comfortable summer dress')"
+            >
+                Summer
+            </button>
+
+            <button
+                class="example"
+                onclick="useExample('Modern western dress under 3000')"
+            >
+                Under ₹3,000
+            </button>
+
+            <button
+                class="example"
+                onclick="useExample('Party dress for women')"
+            >
+                Party
+            </button>
+
+            <button
+                class="example"
+                onclick="useExample('Simple elegant everyday dress')"
+            >
+                Everyday
+            </button>
+
+        </div>
+
+
+
+
+    </section>
+
+
+    <!-- ERROR -->
+
+    <div id="errorMessage" class="error"></div>
+    <details style="margin: 15px 0;"><summary>Extracted tags and API response</summary><pre id="debugInfo"></pre></details>
+
+
+    <!-- RESULTS HEADER -->
+
+    <div class="results-header">
+
+        <h2>
+            Recommended For You
+        </h2>
+
+        <div id="resultCount" class="result-count">
+            Search to see recommendations
+        </div>
+
+    </div>
+
+
+    <!-- LOADING -->
+
+    <div id="loading" class="loading">
+
+        <div class="spinner"></div>
+
+        Finding the best dresses for you...
+
+    </div>
+
+
+    <!-- PRODUCTS -->
+
+    <section id="products" class="products">
+
+        <div class="empty">
+
+            <h3>Start Your Search</h3>
+
+            <p>
+                Try something like
+                "traditional dress for a wedding"
+                or
+                "comfortable dress under ₹3000".
+            </p>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script>
+
+    /*
+    ============================================================
+    BACKEND CONFIGURATION
+    ============================================================
+    */
+
+    const API_URL =
+        location.protocol === "file:" ? "http://127.0.0.1:8000" : location.origin;
+
+
+    /*
+    ============================================================
+    EXAMPLE QUERY
+    ============================================================
+    */
+
+    function useExample(text) {
+
+        document.getElementById("searchInput").value = text;
+
+        searchProducts();
+
+    }
+
+
+    /*
+    ============================================================
+    SEARCH
+    ============================================================
+    */
+
+    async function searchProducts() {
+        const prompt = document.getElementById("searchInput").value.trim();
+        if (!prompt) {
+            showError("Enter a shopping prompt first.");
+            return;
+        }
+
+        showLoading();
+        hideError();
+        document.getElementById("debugInfo").textContent = "";
+        try {
+            const response = await fetch(API_URL + "/recommend-text", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ prompt: prompt })
+            });
+            const data = await response.json();
+            document.getElementById("debugInfo").textContent = JSON.stringify(data, null, 2);
+            if (!response.ok) {
+                throw new Error(data.error || "Backend returned " + response.status);
+            }
+            displayResults(data.recommendations || []);
+        } catch (error) {
+            console.error(error);
+            showError("Recommendation failed: " + error.message);
+        } finally {
+            hideLoading();
+        }
+    }
+
+    function getProduct(item) {
+
+        /*
+        Your backend may return product information
+        inside metadata.
+
+        These are the actual dataset column names.
+        */
+
+        const metadata =
+            item.metadata || {};
+
+
+        return {
+
+            name:
+                metadata["Product Name"] ||
+                "Women's Dress",
+
+            brand:
+                metadata["Brand"] ||
+                "",
+
+            category:
+                metadata["Category"] ||
+                "",
+
+            subCategory:
+                metadata["Sub Category"] ||
+                "",
+
+            price:
+                Number(metadata["Price"] || 0),
+
+            colour:
+                metadata["Primary Colour"] ||
+                "",
+
+            fabric:
+                metadata["Fabric"] ||
+                "",
+
+            occasion:
+                metadata["Occasion"] ||
+                "",
+
+            rating:
+                Number(metadata["Rating"] || 0),
+
+            image:
+                metadata["Image URL"] ||
+                "",
+
+            description:
+                metadata["Product Description"] ||
+                "",
+
+            wedding:
+                metadata["Wedding Suitability"] ||
+                "",
+
+            keywords:
+                metadata["Fashion Keywords"] ||
+                ""
+
+        };
+
+    }
+
+
+    /*
+    ============================================================
+    GET CONTENT
+    ============================================================
+    */
+
+    function getContent(item) {
+
+        return item.content || "";
+
+    }
+
+
+    /*
+    ============================================================
+    DISPLAY RESULTS
+    ============================================================
+    */
+
+    function displayResults(results) {
+
+        const container =
+            document.getElementById("products");
+
+
+        const count =
+            document.getElementById("resultCount");
+
+
+        count.innerText =
+            `${results.length} recommendation${results.length !== 1 ? "s" : ""}`;
+
+
+        if (!results.length) {
+
+            container.innerHTML = `
+
+                <div class="empty">
+
+                    <h3>
+                        No matching dresses found
+                    </h3>
+
+                    <p>
+                        Try changing your prompt or inspect the extracted tags above.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        container.innerHTML = "";
+
+
+        results.forEach((item, index) => {
+
+            const product =
+                getProduct(item);
+
+
+            const card =
+                document.createElement("article");
+
+
+            card.className =
+                "product-card";
+
+
+            /*
+            IMAGE
+            */
+
+            let imageHTML = "";
+
+
+            if (product.image) {
+
+                /*
+                Google Drive "view" URLs often don't work
+                directly as <img>.
+
+                This attempts to convert the Drive URL
+                into a direct image URL.
+                */
+
+                const imageID =
+                    extractGoogleDriveID(product.image);
+
+
+                const imageURL =
+                    imageID
+                        ? `${API_URL}/product-image/${encodeURIComponent(imageID)}`
+                        : product.image;
+
+
+                imageHTML = `
+
+                    <img
+                        src="${escapeHTML(imageURL)}"
+                        referrerpolicy="no-referrer"
+                        alt="${escapeHTML(product.name)}"
+                        onerror="const placeholder = document.createElement('div'); placeholder.className = 'image-placeholder'; placeholder.textContent = 'Image unavailable'; this.replaceWith(placeholder);"
+                    >
+
+                `;
+
+            }
+
+            else {
+
+                imageHTML = `
+
+                    <div class="image-placeholder">
+                        Image unavailable
+                    </div>
+
+                `;
+
+            }
+
+
+            /*
+            MATCH SCORE
+            */
+
+            let matchText =
+                "AI Recommended";
+
+
+            if (item.final_score !== undefined) {
+
+                matchText =
+                    `Match score: ${formatScore(item.final_score)}`;
+
+            }
+
+
+            card.innerHTML = `
+
+                <div class="product-image">
+
+                    ${imageHTML}
+
+                    ${
+                        index === 0
+                        ?
+                        `<div class="badge">${escapeHTML(item.rank_label || "Closest match")}</div>`
+                        :
+                        ""
+                    }
+
+                </div>
+
+
+                <div class="product-info">
+
+                    <div class="brand">
+                        ${escapeHTML(product.brand)}
+                    </div>
+
+
+                    <div class="product-name">
+                        ${escapeHTML(product.name)}
+                    </div>
+
+
+                    <div class="details">
+
+                        ${
+                            product.subCategory
+                            ?
+                            `<span class="tag">
+                                ${escapeHTML(product.subCategory)}
+                            </span>`
+                            :
+                            ""
+                        }
+
+                        ${
+                            product.colour
+                            ?
+                            `<span class="tag">
+                                ${escapeHTML(product.colour)}
+                            </span>`
+                            :
+                            ""
+                        }
+
+                        ${
+                            product.fabric
+                            ?
+                            `<span class="tag">
+                                ${escapeHTML(product.fabric)}
+                            </span>`
+                            :
+                            ""
+                        }
+
+                    </div>
+
+
+                    <div class="description"><p>${escapeHTML(item.explanation || "")}</p>
+
+                        ${escapeHTML(
+                            product.description
+                        )}
+
+                    </div>
+
+
+                    <div class="price-row">
+
+                        <div class="price">
+
+                            ₹${formatPrice(product.price)}
+
+                        </div>
+
+
+                        <div class="rating">
+
+                            ★ ${product.rating || "N/A"}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="match">
+
+                        <strong>
+                            ${matchText}
+                        </strong>
+
+                        ${
+                            product.occasion
+                            ?
+                            `<br>
+                             Occasion:
+                             ${escapeHTML(product.occasion)}`
+                            :
+                            ""
+                        }
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            container.appendChild(card);
+
+        });
+
+    }
+
+
+    /*
+    ============================================================
+    GOOGLE DRIVE IMAGE ID
+    ============================================================
+    */
+
+    function extractGoogleDriveID(url) {
+
+        if (!url) return null;
+
+
+        const match =
+            url.match(
+                /\/d\/([^/]+)/
+            );
+
+
+        return match
+            ? match[1]
+            : null;
+
+    }
+
+
+    /*
+    ============================================================
+    PRICE
+    ============================================================
+    */
+
+    function formatPrice(price) {
+
+        return Number(price || 0)
+            .toLocaleString("en-IN");
+
+    }
+
+
+    /*
+    ============================================================
+    SCORE
+    ============================================================
+    */
+
+    function formatScore(score) {
+        return Number(score).toFixed(2) + " / 10";
+    }
+
+    /*
+    ============================================================
+    HTML ESCAPE
+    ============================================================
+    */
+
+    function escapeHTML(value) {
+
+        return String(value || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+
+    /*
+    ============================================================
+    LOADING
+    ============================================================
+    */
+
+    function showLoading() {
+
+        document.getElementById(
+            "loading"
+        ).style.display = "block";
+
+    }
+
+
+    function hideLoading() {
+
+        document.getElementById(
+            "loading"
+        ).style.display = "none";
+
+    }
+
+
+    /*
+    ============================================================
+    ERROR
+    ============================================================
+    */
+
+    function showError(message) {
+
+        const error =
+            document.getElementById(
+                "errorMessage"
+            );
+
+
+        error.innerText = message;
+
+        error.style.display = "block";
+
+    }
+
+
+    function hideError() {
+
+        document.getElementById(
+            "errorMessage"
+        ).style.display = "none";
+
+    }
+
+
+    /*
+    ============================================================
+    ENTER KEY
+    ============================================================
+    */
+
+    document
+        .getElementById("searchInput")
+        .addEventListener(
+            "keydown",
+            function(event) {
+
+                if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+
+                    searchProducts();
+
+                }
+
+            }
+        );
+
+</script>
+
+</body>
+</html>

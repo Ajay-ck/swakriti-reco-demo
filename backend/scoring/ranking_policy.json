@@ -1,0 +1,44 @@
+{
+  "version": 2,
+  "attribute_weights": {
+    "sub_category": 30,
+    "fabric": 20,
+    "color": 15,
+    "occasion": 15,
+    "details": 10,
+    "style": 5,
+    "comfort": 5
+  },
+  "detail_fields": [
+    "fit",
+    "length",
+    "sleeve",
+    "neckline"
+  ],
+  "relevance": {
+    "specific_attribute_weight": 0.65,
+    "broad_attribute_weight": 0.35,
+    "rank_decay": 0.1
+  },
+  "personalization": {
+    "body_enabled": false,
+    "height_enabled": false,
+    "body_weight": 0.06,
+    "height_weight": 0.04
+  },
+  "business": {
+    "enabled": false,
+    "max_weight": 0.05,
+    "relevance_band_width": 0.05,
+    "metric_weights": {
+      "sales_score": 0.5,
+      "rating_score": 0.3,
+      "trend_score": 0.2
+    }
+  },
+  "retrieval": {
+    "candidate_limit": 100,
+    "small_catalog_limit": 200
+  },
+  "note": "Initial evaluation weights, not calibrated probabilities. Personalization and business require verified catalog evidence before enabling."
+}

@@ -1,0 +1,10 @@
+.env
+.env.*
+!.env.example
+**/venv/
+**/.venv/
+**/__pycache__/
+*.pyc
+model-cache/
+analysis/
+*.log

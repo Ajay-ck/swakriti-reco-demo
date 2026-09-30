@@ -1,0 +1,12 @@
+# Direct backend dependencies. pip installs their required subdependencies.
+fastapi==0.141.1
+uvicorn==0.52.3
+python-dotenv==1.2.2
+google-genai==2.18.1
+qdrant-client==1.19.0
+fastembed==0.8.0
+pandas==3.0.5
+requests==2.34.2
+
+# Needed when PRODUCT_MASTER_PATH points to an .xlsx file.
+openpyxl==3.1.5
